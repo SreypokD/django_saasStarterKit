@@ -1,0 +1,50 @@
+{
+  "name": "node-auth-api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./server.js",
+    "test": "jest --detectOpenHandles --runInBand"
+  },
+  "dependencies": {
+    "@casl/ability": "^5.4.3",
+    "@sentry/node": "^6.12.0",
+    "@sentry/tracing": "^6.12.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "email-templates": "^8.0.8",
+    "express": "^4.17.1",
+    "express-rate-limit": "^5.3.0",
+    "firebase-admin": "^9.11.1",
+    "handlebars": "^4.7.7",
+    "hbs": "^4.1.2",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "mailtrap": "^3.2.0",
+    "moment": "^2.29.1",
+    "mongoose": "^5.12.0",
+    "morgan": "^1.10.0",
+    "nanoid": "^3.1.25",
+    "nodemailer": "^6.6.3",
+    "nodemon": "^2.0.22",
+    "pg": "^8.7.1",
+    "sib-api-v3-sdk": "^8.2.0",
+    "stripe": "^8.174.0"
+  },
+  "type": "module",
+  "jest": {
+    "testEnvironment": "node",
+    "setupFiles": [
+      "<rootDir>/src/Tests/fixtures/setUpEnvVars.js",
+      "<rootDir>/src/Tests/fixtures/setUpMockLibraries.js"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
+    "babel-jest": "^26.6.3",
+    "jest": "^26.6.3",
+    "supertest": "^6.1.3"
+  }
+}

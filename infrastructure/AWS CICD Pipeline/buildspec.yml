@@ -1,0 +1,23 @@
+version: 0.2
+
+# Included here for reference
+# Make sure this file exists in the source project client root directory
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+  pre_build:
+    commands:
+      - echo Installing source NPM dependencies...
+      - cd client
+      - npm install
+      - npm run test
+  build:
+    commands:
+      - echo Build started on `date`
+      - npm run build
+artifacts:
+  files:
+    - '**/*'
+  base-directory: client/public
