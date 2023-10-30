@@ -9,7 +9,7 @@ class User(models.Model):
     username = models.CharField(max_length=255)
     email = models.CharField(max_length=255, unique=True)
     firebase_user_id = models.CharField(max_length=255)
-    verify_key = models.CharField(max_length=255)
+    verify_key = models.CharField(null=True, max_length=255)
     is_email_verified = models.BooleanField(default=False)
 
     def __str__(self):

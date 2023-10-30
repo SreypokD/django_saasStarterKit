@@ -28,13 +28,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# url to connect with Client
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    # " http://127.0.0.1:3000",
-]
-CORS_ALLOW_ALL_ORIGINS = True
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,9 +37,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'corsheaders',
     'saas',
 ]
+
+# url to connect with Client
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    # " http://127.0.0.1:3000",
+]
+CORS_ALLOW_ALL_ORIGINS = True
+APPEND_SLASH = False
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -145,13 +147,19 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# Firebase settings
-FIREBASE_SETTINGS = {
-    "GOOGLE_CLOUD_PROJECT": os.environ.get("saas-starter-kit-pro-6c91d"),
-    "FIREBASE_DATABASE_URL": os.environ.get("https://saas-starter-kit-pro-6c91d-default-rtdb.firebaseio.com/"),
-    "FIREBASE_PROJECT_ID": os.environ.get("saas-starter-kit-pro-6c91d"),
-    "FIREBASE_CLIENT_EMAIL": os.environ.get("firebase-adminsdk-cqybn@saas-starter-kit-pro-6c91d.iam.gserviceaccount.com"),
-    "FIREBASE_PRIVATE_KEY": os.environ.get("-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCyrIOYlFhnNYhV\n8uEcp0mMbFZSIwOtq+j10zpKv/l/XvM6+MqDuztTMQDjRf27zlzWvDajwtx5ke6b\nXxzdfjh2ibL0wXZtjpWWqf5WKkqspNrXr2hNNxDgkH7VBBF/TK5nlXg6cx7FqiEB\nuLuB48vJrmXbmOBQD/L1431K/rXJyy+9asXTFxqGaxcpybmJe4s6N5xBbBnZu1Gb\nLTeAVFpWxLp3ZJ0gExMh9dcFkOa0wNPh0JMStmpBM8wCnpunZuT8s+FOMJ7vkjQj\nLN0vslazu0kb7wCDOM3lHxrNHdNAC6m7HvnAHFM5PZLXDi74BWs7BYtXG2hvWs4U\nvSDdOZ5tAgMBAAECggEADoP55/ArU20zr4ndFHsZvE0D4UXjc11LPodjzbVVc23X\nFFQofbW9DtflEtG5mKOeArsFNF4tE7pRmHFMcskhlK3AqmY6NRHXoMccOMtUSDzX\nY5zmPBmsZxYOG8eqFT25UISB4Tu/hP76kf18TEPhpzeiIkpD9PUqv6O05t4VDjju\n5w3Lo4GZhMMHyUikgywEEfIn1JAXGhDOXZ9KU1iDUx4zFC/vZLMX7hHBoo3AgnHT\nHPNLOdaVeKSAXoxWTHCWctVvB1HAuOQufdYUpf2/g8CxkdF6H2zO1j6XDs04a1aY\nN2f7ORc9Tq6suVJ+9xcALT8By4D23VIG4hailFgPQQKBgQDvJaNPBCgXuTmXLTPE\n1bG11Ij+aPO+S1IK3oqxE52hejtKWsoh4MDMoZBSZXIbBrjqzj92egQ+DVz8tX9Z\n8kbrNlTZvSvxrAPmuh1vuOhskgncCpxarMhuZ4NGv0RA/GzsQhuPCHYdn49GLY09\n3ztZJKxQ4tucm85f0+bQS7kJwQKBgQC/Q+cd4/Irz13gkW06cSVC/VuKteQc/ofV\n7ZxccVA3IVdEXNcVtDWHOVWnOsHQcUZ/jzzpblU9Uh63NbhnpJDv+2McciXvek09\nvzIMG1R2Vp8H/7wR920szDz10ycOhFZvMgLMMBuzzpiI7tPC027PeFGOq0Q2y3zw\nQtsRFtnHrQKBgQDJVe+qi35RksB4lTa7ZYmK4tc/EQ78S59TxU4QjMot86FNFSiN\n4xGOdgryQ7QQKtWt4Vwum8VMlKWPoCIKkN3CEujWs9v2R/K04kX8FDmhhkXEui4u\nbL8FrCIqgsasy5fMRE+9WMtQX1AZLip2R6VIhIaKRqPLsqTJqrXs8YNkQQKBgQCS\ntCalyp2J9Phws5swZHDMPUDl2DYr9x+Be0ufrFp2ruAc04k2YI9eNR/5sRvQIdKN\nLPTvp21CJ6bfqBjVhmiVaiDPRM7MLObqIajlmGDkk/RPUlyS+1GGNvHbLCac/+y8\nRYPX0l6tQB3Hikhq+3nXMNZ9s+gSj2o5b05QgVJx0QKBgBcAYbwmgL9R6q3wpZe1\nPV9KfRyE4wmdmN6p7CaGu5+Cdyay+dZQKm7wWsZOxMnFeIumNZJRQx2aFxleKE1v\ns3iHQgAhmpKcKUcHOkdKv9PPAWg+LG1FZZGU/kXdo2q8+hmjdgdARhzalQg9V59b\nzGEpbgf259c1xLGQnOT0bSTP\n-----END PRIVATE KEY-----\n"),
-}
+# Firebase Environment Variables
+GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "saas-starter-kit-pro-6c91d")
+FIREBASE_DATABASE_URL = os.environ.get("FIREBASE_DATABASE_URL", "https://saas-starter-kit-pro-6c91d-default-rtdb.firebaseio.com/")
+FIREBASE_PROJECT_ID = os.environ.get("FIREBASE_PROJECT_ID", "saas-starter-kit-pro-6c91d")
+FIREBASE_CLIENT_EMAIL = os.environ.get("FIREBASE_CLIENT_EMAIL", "firebase-adminsdk-cqybn@saas-starter-kit-pro-6c91d.iam.gserviceaccount.com")
+FIREBASE_PRIVATE_KEY = os.environ.get("FIREBASE_PRIVATE_KEY", "YourPrivateKeyHere")
 
+# Auth Secret
+AUTH_SECRET = os.environ.get("AUTH_SECRET", "root")
+
+
+
+# Mailtrap credentials
+MAIL_TRAP_USERNAME = os.environ.get("MAIL_TRAP_USERNAME", "40cdeb2262a948")
+MAIL_TRAP_PASSWORD = os.environ.get("MAIL_TRAP_PASSWORD", "326df14116f3b1")
 

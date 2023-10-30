@@ -1,7 +1,10 @@
-from django.urls import path
-from . import views
+from rest_framework.routers import DefaultRouter
+from saas.api.urls import user_router
+from django.urls import path , include
+router = DefaultRouter()
+router.registry.extend(user_router.registry)
 
 urlpatterns = [
-    # Other URL patterns
-    path('auth/signup', views.signup, name='signup'),
+    path('', include(router.urls)),
 ]
+
