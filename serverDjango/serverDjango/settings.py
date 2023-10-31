@@ -39,16 +39,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'saas',
+    'saas'
 ]
 
 # url to connect with Client
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     # " http://127.0.0.1:3000",
 ]
-CORS_ALLOW_ALL_ORIGINS = True
-APPEND_SLASH = False
+
+CORS_ALLOW_ALL_ORIGINS = False
+# CORS_ALLOW_CREDENTIALS = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -66,7 +68,7 @@ ROOT_URLCONF = 'serverDjango.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'client' , 'src')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -141,25 +143,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# Firebase Environment Variables
-GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "saas-starter-kit-pro-6c91d")
-FIREBASE_DATABASE_URL = os.environ.get("FIREBASE_DATABASE_URL", "https://saas-starter-kit-pro-6c91d-default-rtdb.firebaseio.com/")
-FIREBASE_PROJECT_ID = os.environ.get("FIREBASE_PROJECT_ID", "saas-starter-kit-pro-6c91d")
-FIREBASE_CLIENT_EMAIL = os.environ.get("FIREBASE_CLIENT_EMAIL", "firebase-adminsdk-cqybn@saas-starter-kit-pro-6c91d.iam.gserviceaccount.com")
-FIREBASE_PRIVATE_KEY = os.environ.get("FIREBASE_PRIVATE_KEY", "YourPrivateKeyHere")
-
-# Auth Secret
-AUTH_SECRET = os.environ.get("AUTH_SECRET", "root")
-
-
-
-# Mailtrap credentials
-MAIL_TRAP_USERNAME = os.environ.get("MAIL_TRAP_USERNAME", "40cdeb2262a948")
-MAIL_TRAP_PASSWORD = os.environ.get("MAIL_TRAP_PASSWORD", "326df14116f3b1")
 
