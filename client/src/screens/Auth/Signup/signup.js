@@ -119,8 +119,10 @@ const Signup = () => {
             initialValues={{ email: '', password: '', username: '' }}
             onSubmit={handleSubmit}
           >
+
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit }) => (
               <form onSubmit={handleSubmit}>
+               
                 <Label htmlFor="email">Email:</Label>
                 <InputWrapper>
                   <Input
