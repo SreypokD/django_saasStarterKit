@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@-)b3y9#r_w*(h3&dt_u1gtplx5*c02ht&0l93#_0s&ruz@1y&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["http://localhost:3000"]
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -49,7 +49,7 @@ CORS_ALLOWED_ORIGINS = [
     # " http://127.0.0.1:3000",
 ]
 
-# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True
 # CORS_ALLOW_CREDENTIALS = True
 
 MIDDLEWARE = [
@@ -61,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware', # connect with client 
+    'django.middleware.csrf.CsrfViewMiddleware'
 ]
 
 ROOT_URLCONF = 'serverDjango.urls'
@@ -151,6 +152,17 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 FIREBASE_CONFIG = os.path.join(BASE_DIR , 'firebase_config.json')
+
+# Firebase configuration
+FIREBASE_API_KEY = "AIzaSyDJuLNfKVswf5Ul9RUOYtzfCai5DxqNQqs"
+FIREBASE_AUTH_DOMAIN = "saas-starter-kit-pro-6c91d.firebaseapp.com"
+FIREBASE_DATABASE_URL = "https://saas-starter-kit-pro-6c91d-default-rtdb.firebaseio.com/"
+FIREBASE_PROJECT_ID = "saas-starter-kit-pro-6c91d"
+FIREBASE_STORAGE_BUCKET = "saas-starter-kit-pro-6c91d.appspot.com"
+FIREBASE_MESSAGING_SENDER_ID = "538255995637"
+FIREBASE_APP_ID =  "1:538255995637:web:7fc4832f0bbdf42cfa0bbc"
+FIREBASE_MEASUREMENT_ID = "G-H80MWNQ31R"
+
 
 
 
