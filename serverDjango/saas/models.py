@@ -6,7 +6,7 @@ class User(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False )
     username = models.CharField(max_length=255)
     email = models.CharField(max_length=255, unique=True)
-    firebase_user_id = models.CharField(max_length=255)
+    firebase_user_id = models.CharField(max_length=255, null=True, blank=True)
     verify_key = models.CharField(null=True, max_length=255 )
     is_email_verified = models.BooleanField(default=False ,null= True)
 

@@ -26,8 +26,7 @@ SECRET_KEY = 'django-insecure-@-)b3y9#r_w*(h3&dt_u1gtplx5*c02ht&0l93#_0s&ruz@1y&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
@@ -56,7 +55,6 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -151,7 +149,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-FIREBASE_CONFIG = os.path.join(BASE_DIR , 'firebase_config.json')
+# FIREBASE_CONFIG = os.path.join(BASE_DIR , 'firebase_config.json')``
 
 # Firebase configuration
 FIREBASE_API_KEY = "AIzaSyDJuLNfKVswf5Ul9RUOYtzfCai5DxqNQqs"
