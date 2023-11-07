@@ -29,6 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 # Application definition
 
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -149,7 +150,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# FIREBASE_CONFIG = os.path.join(BASE_DIR , 'firebase_config.json')``
+FIREBASE_CONFIG = os.path.join(BASE_DIR , 'firebase_config.json')
 
 # Firebase configuration
 FIREBASE_API_KEY = "AIzaSyDJuLNfKVswf5Ul9RUOYtzfCai5DxqNQqs"
