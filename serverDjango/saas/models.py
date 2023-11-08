@@ -25,6 +25,14 @@ class Role(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=255)
 
+
+class Invite(models.Model):
+    org_id = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    verify_key = models.CharField(max_length=255)
+    recipient_email = models.CharField(max_length=255)
+    sender_email = models.CharField(max_length=255)
+
+
 class Todo(models.Model):
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=1000)
@@ -33,8 +41,44 @@ class Todo(models.Model):
     date = models.CharField(max_length=255)
     org_id = models.ForeignKey(Organization, on_delete=models.CASCADE)
 
-class Invite(models.Model):
-    org_id = models.ForeignKey(Organization, on_delete=models.CASCADE)
-    verify_key = models.CharField(max_length=255)
-    recipient_email = models.CharField(max_length=255)
-    sender_email = models.CharField(max_length=255)
+    @classmethod
+    def get_todos(cls, org_id):
+        # Implement your logic to retrieve todos here
+        # You can use Django's ORM to query the database
+        # Return the results
+        return cls.objects.filter(org_id=org_id).all()
+
+    @classmethod
+    def create_todo(cls, title, description, author, status, date, org_id):
+        # Implement your logic to create a new todo here
+        # Use Django's ORM to create a new Todo object
+        # Save it to the database
+        todo = cls(title=title, description=description, author=author, status=status, date=date, org_id=org_id)
+        todo.save()
+        return todo
+
+    @classmethod
+    def update_todo(cls, title, description, author, status, date, todo_id):
+        # Implement your logic to update a todo here
+        # Use Django's ORM to retrieve and update the Todo object
+        todo = cls.objects.get(id=todo_id)
+        todo.title = title
+        todo.description = description
+        todo.author = author
+        todo.status = status
+        todo.date = date
+        todo.save()
+
+    @classmethod
+    def delete_todo(cls, todo_id):
+        # Implement your logic to delete a todo here
+        # Use Django's ORM to retrieve and delete the Todo object
+        cls.objects.filter(id=todo_id).delete()
+
+    @classmethod
+    def complete_todo(cls, todo_id):
+        # Implement your logic to mark a todo as completed here
+        # Use Django's ORM to retrieve and update the Todo object
+        todo = cls.objects.get(id=todo_id)
+        todo.status = 'completed'
+        todo.save()
