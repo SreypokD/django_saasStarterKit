@@ -51,9 +51,8 @@ def signup(request):
         print('Received Token:', token)  # Debugging line
         if token:
             try:
-                # Decode the token
-                token_data = jwt.decode(token, algorithms=['RS256'])
-                print(token_data)  # Debugging line
+                token_data = jwt.decode(token, algorithms=['RS256'], options={"verify_signature": False})
+                print('Token Data:', token_data)  # Debugging line
 
                 # Extract user_id from the token claims
                 user_id = token_data.get('user_id')
@@ -64,9 +63,11 @@ def signup(request):
                 if serializer.is_valid():
                     email = serializer.validated_data.get('email')
                     username = serializer.validated_data.get('username')
+                    
 
                     # Set the firebase_user_id to the user_id from the token
                     new_user = User(email=email, username=username, firebase_user_id=user_id)
+                    print('here is :',new_user)
                     new_user.save()  # Save the user to the database
 
                     # Authenticate the user and log them in if needed
@@ -88,9 +89,51 @@ def signup(request):
 
 
 
+@api_view(['POST'])
+def login(request):
+    if request.method == 'POST':
+        email = request.data.get('email')
+        password = request.data.get('password')
+        token = request.data.get('token')  # Get the token from the client
+
+        if token:
+            try:
+                token_data = jwt.decode(token, algorithms=['RS256'], options={"verify_signature": False})
+                user_id = token_data.get('user_id')
+
+                # Authenticate user with token
+                user = authenticate(request, firebase_user_id=user_id)
+            except jwt.ExpiredSignatureError:
+                # Handle token expiration
+                return Response({'error': 'Token has expired'}, status=status.HTTP_401_UNAUTHORIZED)
+            except jwt.DecodeError:
+                # Handle token decode error
+                return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+        elif email and password:
+            # Authenticate user with email and password
+            user = authenticate(request, email=email, password=password)
+        else:
+            return Response({'error': 'Invalid authentication data'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if user is not None:
+            login(request, user)
+            jwt_token = generate_jwt_token(user)
+            return Response({'token': jwt_token}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid credentials or email not found'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 
+def generate_jwt_token(user):
+    # Generate a JWT token with user data
+    payload = {
+        'user_id': user.id,
+        'email': user.email,
+        'username': user.username,
+        # Add other relevant user data to the payload if needed
+    }
+    jwt_token = jwt.encode(payload, algorithm='HS256')
+    return jwt_token
 
 
 
