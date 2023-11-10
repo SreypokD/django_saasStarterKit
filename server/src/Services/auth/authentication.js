@@ -37,6 +37,7 @@ export const CreateUser = async (req, res) => {
 
 export const SignUp = async (req, res) => {
   let token = req.body.token;
+  
   let username = req.body.username;
   let email = req.body.email;
   let invite_key = req.body.invite_key;

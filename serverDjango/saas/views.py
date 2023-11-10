@@ -1,40 +1,4 @@
-# from rest_framework import status
-# from rest_framework.response import Response
-# from rest_framework.decorators import api_view
-# from django.contrib.auth import login, authenticate
-# from django.contrib.auth.models import User
-# from .serializers import UserSerializer
-# from .models import User  # Import your User model
-# from django.utils.crypto import get_random_string
-
-# @api_view(['POST'])
-# def signup(request):
-#     if request.method == 'POST':
-#         serializer = UserSerializer(data=request.data)
-#         token = request.data.get('token')  # Get the token from the client
-
-#         if serializer.is_valid():
-#             print('token:', token)  # Print the token value
-#             email = serializer.validated_data.get('email')
-#             username = serializer.validated_data.get('username')
-#             firebase_user_id = token  # Assign the token to firebase_user_id
-#             print("hiiiiiiiiiiiiiiiiiiiiii", firebase_user_id)
-            
-#             # Generate a verify_key (for example, a random string)
-#             verify_key = get_random_string(length=32)
-
-#             # Create a new User instance with the extracted data
-#             user = User(email=email, username=username, firebase_user_id=firebase_user_id, verify_key=verify_key)
-#             user.save()
-
-#             # Authenticate the user and log them in
-#             if user:
-#                 login(request, user)
-
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    
+  
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -56,11 +20,11 @@ def signup(request):
 
                 # Extract user_id from the token claims
                 user_id = token_data.get('user_id')
-                print('User ID:', user_id)  # Debugging line
 
                 # Create a new User instance with the extracted data
                 serializer = UserSerializer(data=request.data)
                 if serializer.is_valid():
+                    print('User ID:', user_id)  # Debugging line
                     email = serializer.validated_data.get('email')
                     username = serializer.validated_data.get('username')
                     
@@ -86,6 +50,20 @@ def signup(request):
         else:
             # Handle case where no token is provided
             return Response({'error': 'No token provided'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+@api_view(['POST'])
+def verify_user(request, verify_key):
+    try:
+        user = User.objects.get(verify_key=verify_key)
+        user.verify_key = ''
+        user.is_email_verified = True
+        user.save()
+
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
 
 
 
