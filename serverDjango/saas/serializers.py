@@ -21,7 +21,7 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"  # Include 'firebase_user_id' field
+        fields = ['id', 'username', 'email', 'firebase_user_id', 'verify_key', 'is_email_verified']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
