@@ -7,11 +7,12 @@ class User(models.Model):
     username = models.CharField(max_length=255)
     email = models.CharField(max_length=255, unique=True)
     firebase_user_id = models.CharField(max_length=255, null=True, blank=True)
-    verify_key = models.BooleanField(default=True , null=True)
-    is_email_verified = models.BooleanField(default=True ,null= True)
+    verify_key = models.CharField(max_length=255, null=True, blank=True)
+    is_email_verified = models.BooleanField(null= True)
 
     def __str__(self):
         return self.email
+    
 class Organization(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     org_name = models.CharField(null=True, max_length=255)
