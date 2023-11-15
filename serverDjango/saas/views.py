@@ -308,52 +308,9 @@ from .models import User
 import jwt
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
-
-@api_view(['POST'])
-def signup(request):
-    if request.method == 'POST':
-        token = request.data.get('token')  # Get the token from the client
-
-        if token:
-            try:
-                token_data = jwt.decode(token, algorithms=['RS256'], options={"verify_signature": False})
-
-                user_id = token_data.get('user_id')
-
-                serializer = UserSerializer(data=request.data)
-                if serializer.is_valid():
-                    email = serializer.validated_data.get('email')
-                    username = serializer.validated_data.get('username')
-                    verify_key = get_random_string(20)
-                    is_email_verified = False
-                    # Set the firebase_user_id to the user_id from the token
-                    new_user = User(
-                        email=email,
-                        username=username,
-                        firebase_user_id=user_id,  # Assign firebase_user_id
-                        verify_key=verify_key,  # Assign a verification key
-                        is_email_verified=is_email_verified  # Ensure email verification is initially set to False
-                    )
-                    new_user.save()
-                    # Authenticate the user and log them in if needed
-                    user = authenticate(email=email, username=username)
-                    if user:
-                        login(request, user)
-
-                    return Response(serializer.data, status=status.HTTP_201_CREATED)
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            except jwt.ExpiredSignatureError:
-                # Handle token expiration
-                return Response({'error': 'Token has expired'}, status=status.HTTP_401_UNAUTHORIZED)
-            except jwt.DecodeError:
-                # Handle token decode error
-                return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
-        else:
-            # Handle case where no token is provided
-            return Response({'error': 'No token provided'}, status=status.HTTP_401_UNAUTHORIZED)
-
 from django.http import JsonResponse
 from .utils import verify_user, create_contact, send_email, set_token
+
 
 @api_view(['POST'])
 def create_user(request):
@@ -391,17 +348,62 @@ def create_user(request):
     return JsonResponse({'error': 'Invalid request method'})
 
 
-# test==============================================================
-# from django.core.mail import send_mail
-# from django.http import HttpResponse
+@api_view(['POST'])
+def signup(request):
+    if request.method == 'POST':
+        token = request.data.get('token')  # Get the token from the client
 
-# def simple_mail(request):
-#     send_mail(
-#         subject= 'hi',
-#         message='That’s your message body',
-#         from_email= 'from@yourdjangoapp.com',
-#         recipient_list= ['to@yourbestuser.com'])
-#     return HttpResponse('message sent successfully')
+        if token:
+            try:
+                token_data = jwt.decode(token, algorithms=['RS256'], options={"verify_signature": False})
+
+                user_id = token_data.get('user_id')
+
+                serializer = UserSerializer(data=request.data)
+                if serializer.is_valid():
+                    email = serializer.validated_data.get('email')
+                    username = serializer.validated_data.get('username')
+                    cof = request.data.get('confirmEmailUrl')
+                    verify_key = get_random_string(20)
+                    is_email_verified = False
+                    # Set the firebase_user_id to the user_id from the token
+                    new_user = User(
+                        email=email,
+                        username=username,
+                        firebase_user_id=user_id,  # Assign firebase_user_id
+                        verify_key=verify_key,  # Assign a verification key
+                        is_email_verified=is_email_verified  # Ensure email verification is initially set to False
+                    )
+                    new_user.save()
+                    # Authenticate the user and log them in if needed
+                    user = authenticate(email=email, username=username,
+                                        )
+                    if user:
+                        login(request, user)
+                    
+                     # Send an email with the verification link
+                    verification_link = f"http://localhost:3000/auth/confirmedemail/?key={verify_key}/"
+                    template = 'email_verification'
+                    locals = {'verification_link': verification_link}
+                    send_email(email, template, locals)
+
+                    # return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            except jwt.ExpiredSignatureError:
+                # Handle token expiration
+                return Response({'error': 'Token has expired'}, status=status.HTTP_401_UNAUTHORIZED)
+            except jwt.DecodeError:
+                # Handle token decode error
+                return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            # Handle case where no token is provided
+            return Response({'error': 'No token provided'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+
 
     
 
@@ -412,28 +414,6 @@ def create_user(request):
 
 
 
-
-
-
-
-
-
-
-
-
-@api_view(['POST'])
-def verify_user(request, verify_key):
-    try:
-        user = User.objects.get(verify_key=verify_key)
-        print( 'user' , user)
-        user.verify_key = ''
-        user.is_email_verified = True
-        user.save()
-
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
-    except User.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
 # @api_view(['POST'])
 # def login_user(request):

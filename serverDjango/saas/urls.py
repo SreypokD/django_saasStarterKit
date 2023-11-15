@@ -10,7 +10,7 @@ urlpatterns = [
     # path('mail/', views.simple_mail),
     
     # path('getuser/', views.getuser),
-    # path('create-user/', views.create_user),
+    path('create-user', views.create_user),
     # path('update-username/', views.update_username),
     # path('update-email/', views.update_email),
 

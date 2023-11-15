@@ -1,33 +1,51 @@
 # utils.py
-from rest_framework.authtoken.models import Token
-from .models import *
+
+from django.core.mail import send_mail
+from django.conf import settings
+import jwt
+from datetime import datetime, timedelta
+
+from .models import User
 
 def verify_user(verify_key):
-    # Placeholder: Implement your logic for verifying the user
-    # For example, assuming you have a User model with a field 'verify_key':
     try:
-        user = User.objects.get(verify_key=verify_key)
-        return user if user else None
+        # Assuming 'verify_key' is a unique key used for verification
+        user_to_verify = User.objects.get(verify_key=verify_key, is_email_verified=False)
+        return user_to_verify
     except User.DoesNotExist:
         return None
 
 def create_contact(email, first_name):
-    # Placeholder: Implement your logic for saving contact
-    # This might involve saving the contact information to a CRM system or elsewhere
-    # For example, you can print a message for demonstration purposes
-    print(f"Contact created for {first_name} with email: {email}")
+    # Placeholder function for saving contact information
+    # Implement your logic to save contact information here
+    pass
 
-def send_email(email, template, locals):
-    # Placeholder: Implement your logic for sending an email
-    # This might involve using a library like Django's send_mail or a third-party service
-    # For example, you can print a message for demonstration purposes
-    print(f"Email sent to {email} using template {template} with locals: {locals}")
+def send_email(to_email, template, locals):
+    # Placeholder function for sending emails
+    # Implement your logic to send emails using Django's send_mail function
+    subject = 'Please verify Email'  # Replace with your email subject
+    message = 'Message'  # Replace with your plain text email message
+
+    # html_message = 'heloo '  # Replace with your HTML email message
+    html_message = f'<a href ="{locals["verification_link"]}">Click</a>'  # Replace with your HTML email message
+
+    send_mail(
+        subject=subject,
+        message=message,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[to_email],
+        fail_silently=False,
+        html_message=html_message,
+    )
 
 def set_token(user_id):
-    # Placeholder: Implement your logic for generating a token
-    # This example uses Django Rest Framework's Token authentication
-    # You need to have the Token model from 'rest_framework.authtoken' installed
-    user, created = User.objects.get_or_create(id=user_id)
-    token, created = Token.objects.get_or_create(user=user)
-    return token.key
+    # Placeholder function for generating tokens
+    # Implement your logic to generate tokens (e.g., using Django REST Framework's Token model)
+    expiration_time = datetime.utcnow() + timedelta(days=1)
+    payload = {
+        'user_id': user_id,
+        'exp': expiration_time,
+    }
+    token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+    return token
 
