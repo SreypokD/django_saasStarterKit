@@ -479,36 +479,44 @@ def create_user(request):
     if request.method == 'POST':
         verify_key = request.data.get('verify_key')
 
+        # Check if the verification key is provided
+        if not verify_key:
+            return JsonResponse({'error': 'Verification key is missing'}, status=400)
+
         # Implement your own logic for verifying the user
         user_to_verify = verify_user(verify_key)
 
-        if not user_to_verify:
+        # Check if the user is not found or already verified
+        if not user_to_verify or user_to_verify.is_email_verified:
             return JsonResponse({'error': 'Invalid verification key or user already verified'}, status=400)
 
-        # Update user's email verification status
-        user_to_verify.is_email_verified = True
-        user_to_verify.verify_key = ""  # Set verify_key to empty
-        user_to_verify.save()
+        try:
+            # Update user's email verification status
+            user_to_verify.is_email_verified = True
+            user_to_verify.verify_key = ""  # Set verify_key to empty
+            user_to_verify.save()
 
-        user_id = user_to_verify.id
-        username = user_to_verify.username
-        email = user_to_verify.email
+            user_id = user_to_verify.id
+            username = user_to_verify.username
+            email = user_to_verify.email
 
-        # Implement your own logic for saving contact
-        first_name = username.split(' ')[0]
-        create_contact(email, first_name)
+            # Implement your own logic for saving contact
+            first_name = username.split(' ')[0]
+            create_contact(email, first_name)
 
-        # Implement your own logic for sending welcome email
-        template = 'welcome'
-        locals = {'FIRSTNAME': first_name}
-        send_email(email, template, locals)
+            # Implement your own logic for sending welcome email
+            template = 'welcome'
+            locals = {'FIRSTNAME': first_name}
+            send_email(email, template, locals)
 
-        # Implement your own logic for generating tokens
-        token = set_token(user_id)
+            # Implement your own logic for generating tokens
+            token = set_token(user_id)
 
-        return JsonResponse({'token': token, 'user_id': user_id, 'username': username, 'email': email})
+            return JsonResponse({'token': token, 'user_id': user_id, 'username': username, 'email': email})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)  # Internal Server Error
 
-    return JsonResponse({'error': 'Invalid request method'})
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
 
     
 
