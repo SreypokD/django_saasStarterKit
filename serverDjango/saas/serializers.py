@@ -23,7 +23,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email', 'firebase_user_id', 'verify_key', 'is_email_verified']
         extra_kwargs = {'password': {'write_only': True}}
-
     def create(self, validated_data):
         user = User(
             email=validated_data['email'],

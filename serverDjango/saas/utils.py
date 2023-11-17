@@ -27,7 +27,7 @@ def send_email(to_email, template, locals):
     message = 'Message'  # Replace with your plain text email message
 
     # html_message = 'heloo '  # Replace with your HTML email message
-    html_message = f'<a href ="{locals["verification_link"]}">Click</a>'  # Replace with your HTML email message
+    html_message =  f'<a href ="{locals["verification_link"]}">Click</a>'  # Replace with your HTML email message
 
     send_mail(
         subject=subject,
