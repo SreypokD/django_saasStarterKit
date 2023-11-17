@@ -312,7 +312,22 @@ from django.http import JsonResponse
 from .utils import verify_user, create_contact, send_email, set_token
 
 
+# views.py
+
+from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import User
+from .serializers import UserSerializer
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
+
 @api_view(['POST'])
+@csrf_exempt
 def create_user(request):
     if request.method == 'POST':
         verify_key = request.data.get('verify_key')
@@ -349,6 +364,7 @@ def create_user(request):
 
 
 @api_view(['POST'])
+@csrf_exempt
 def signup(request):
     if request.method == 'POST':
         token = request.data.get('token')  # Get the token from the client
@@ -363,9 +379,13 @@ def signup(request):
                 if serializer.is_valid():
                     email = serializer.validated_data.get('email')
                     username = serializer.validated_data.get('username')
-                    cof = request.data.get('confirmEmailUrl')
+                    confirm_email_url = request.data.get('confirmEmailUrl')
+                    invite_key = request.data.get('invite_key')
+                    is_invite_flow = request.data.get('isInviteFlow')
+
                     verify_key = get_random_string(20)
                     is_email_verified = False
+
                     # Set the firebase_user_id to the user_id from the token
                     new_user = User(
                         email=email,
@@ -375,20 +395,17 @@ def signup(request):
                         is_email_verified=is_email_verified  # Ensure email verification is initially set to False
                     )
                     new_user.save()
+
                     # Authenticate the user and log them in if needed
-                    user = authenticate(email=email, username=username,
-                                        )
+                    user = authenticate(email=email, username=username)
                     if user:
                         login(request, user)
-                    
-                     # Send an email with the verification link
+
+                    # Send an email with the verification link
                     verification_link = f"http://localhost:3000/auth/confirmedemail/?key={verify_key}/"
                     template = 'email_verification'
                     locals = {'verification_link': verification_link}
                     send_email(email, template, locals)
-
-                    # return Response(serializer.data, status=status.HTTP_201_CREATED)
-
 
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -401,6 +418,7 @@ def signup(request):
         else:
             # Handle case where no token is provided
             return Response({'error': 'No token provided'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 
 
