@@ -430,7 +430,6 @@ from django.utils.crypto import get_random_string
 def signup(request):
     if request.method == 'POST':
         token = request.data.get('token')  # Get the token from the client
-
         if token:
             try:
                 token_data = jwt.decode(token, algorithms=['RS256'], options={"verify_signature": False})
@@ -459,9 +458,9 @@ def signup(request):
                     verification_link = f"http://localhost:3000/auth/confirmedemail/?key={verify_key}/"
                     template = 'email_verification'
                     locals = {'verification_link': verification_link}
-                    send_email(email, template, locals)
+                    send_email(email, template, locals,username)
 
-                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                    return Response({'success': 'sent email sucessfully'},status=status.HTTP_201_CREATED)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             except jwt.ExpiredSignatureError:
                 # Handle token expiration
@@ -473,9 +472,16 @@ def signup(request):
             # Handle case where no token is provided
             return Response({'error': 'No token provided'}, status=status.HTTP_401_UNAUTHORIZED)
 
-@api_view(['POST'])
-@csrf_exempt
-def create_user(request):
+
+
+
+
+
+
+
+# @api_view(['POST'])
+# @csrf_exempt
+# def create_user(request):
     if request.method == 'POST':
         verify_key = request.data.get('verify_key')
 

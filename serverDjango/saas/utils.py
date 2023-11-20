@@ -20,15 +20,26 @@ def create_contact(email, first_name):
     # Implement your logic to save contact information here
     pass
 
-def send_email(to_email, template, locals):
+def send_email(to_email, template, locals, username):
     # Placeholder function for sending emails
     # Implement your logic to send emails using Django's send_mail function
     subject = 'Please verify Email'  # Replace with your email subject
     message = 'Message'  # Replace with your plain text email message
 
     # html_message = 'heloo '  # Replace with your HTML email message
-    html_message =  f'<a href ="{locals["verification_link"]}">Click</a>'  # Replace with your HTML email message
-
+    # html_message =  f'<h2 color="red">Hi {username},</h2><a href ="{locals["verification_link"]}">Click</a>'  # Replace with your HTML email message
+    html_message = f'''
+        <html
+            <body>
+                <h2 style="color: #336699;">Hi {username},</h2>
+                <p>
+                    Click the following link to verify your email:
+                    <a href="{locals["verification_link"]}" style="color: #009900; font-weight: bold;">Click here</a>
+                    <p>{locals["verification_link"]}</p>
+                </p>
+            </body>
+        </html>
+    '''
     send_mail(
         subject=subject,
         message=message,
