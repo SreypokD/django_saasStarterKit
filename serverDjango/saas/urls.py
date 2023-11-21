@@ -1,13 +1,16 @@
 # urls.py
 
 from django.urls import path
-from . import views
+from .auth import view
 
 urlpatterns = [
-    path('signup', views.signup),
-    # path('create-user', views.create_user),
-    path('login/', views.login),
+    path('signup', view.signup),
+    path('create-user', view.create_user),
+    # path('login', views.login),
     
+
+
+
     # path('mail/', views.simple_mail),
     
     # path('getuser/', views.getuser),

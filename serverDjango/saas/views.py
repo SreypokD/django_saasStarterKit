@@ -440,7 +440,8 @@ def signup(request):
                 if serializer.is_valid():
                     email = serializer.validated_data.get('email')
                     username = serializer.validated_data.get('username')
-
+                    invite_key = serializer.validated_data.get('invite_key')
+                    invite_key = serializer.validated_data.get('invite_key')
                     # Generate a verification key
                     verify_key = get_random_string(20)
 
@@ -479,9 +480,9 @@ def signup(request):
 
 
 
-# @api_view(['POST'])
-# @csrf_exempt
-# def create_user(request):
+@api_view(['POST'])
+@csrf_exempt
+def create_user(request):
     if request.method == 'POST':
         verify_key = request.data.get('verify_key')
 
@@ -541,27 +542,4 @@ def signup(request):
 
 
 
-# @api_view(['POST'])
-# def login_user(request):
-#     # Rest of your login code goes here (omitted for brevity)
-    
 
-# @api_view(['GET'])
-# def get_todos(request):
-#     # Rest of your code for getting todos
-
-# @api_view(['POST'])
-# def post_todo(request):
-#     # Rest of your code for posting todos
-
-# @api_view(['PUT'])
-# def put_todo(request):
-#     # Rest of your code for updating todos
-
-# @api_view(['DELETE'])
-# def delete_todo(request):
-#     # Rest of your code for deleting todos
-
-# @api_view(['PATCH'])
-# def complete_todo(request):
-#     # Rest of your code for marking todos as complete
