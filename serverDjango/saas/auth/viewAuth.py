@@ -11,6 +11,7 @@ from ..serializers import UserSerializer
 import jwt
 from django.utils.crypto import get_random_string
 
+
 @api_view(['POST'])
 @csrf_exempt
 def signup(request):
@@ -65,68 +66,66 @@ def signup(request):
 # @api_view(['POST'])
 # @csrf_exempt
 # def create_user(request):
-    if request.method == 'POST':
-        verify_key = request.data.get('verify_key')
+#     if request.method == 'POST':
+#         verify_key = request.data.get('verify_key')
 
-        # Check if the verification key is provided
-        if not verify_key:
-            return JsonResponse({'error': 'Verification key is missing'}, status=400)
+#         # Check if the verification key is provided
+#         if not verify_key:
+#             return JsonResponse({'error': 'Verification key is missing'}, status=400)
 
-        # Implement your own logic for verifying the user
-        user_to_verify = verify_user(verify_key)
+#         # Implement your own logic for verifying the user
+#         user_to_verify = verify_user(verify_key)
 
-        # Check if the user is not found or already verified
-        if not user_to_verify or user_to_verify.is_email_verified:
-            return JsonResponse({'error': 'Invalid verification key or user already verified'}, status=400)
+#         # Check if the user is not found or already verified
+#         if not user_to_verify or user_to_verify.is_email_verified:
+#             return JsonResponse({'error': 'Invalid verification key or user already verified'}, status=400)
 
-        try:
-            # Update user's email verification status
-            user_to_verify.is_email_verified = True
-            user_to_verify.verify_key = ""  # Set verify_key to empty
-            user_to_verify.save()
+#         try:
+#             # Update user's email verification status
+#             user_to_verify.is_email_verified = True
+#             user_to_verify.verify_key = ""  # Set verify_key to empty
+#             user_to_verify.save()
 
-            user_id = user_to_verify.id
-            username = user_to_verify.username
-            email = user_to_verify.email
+#             user_id = user_to_verify.id
+#             username = user_to_verify.username
+#             email = user_to_verify.email
 
-            # Implement your own logic for saving contact
-            first_name = username.split(' ')[0]
-            create_contact(email, first_name)
+#             # Implement your own logic for saving contact
+#             first_name = username.split(' ')[0]
+#             create_contact(email, first_name)
 
-            # Implement your own logic for sending welcome email
-            template = 'welcome'
-            locals = {'FIRSTNAME': first_name}
-            send_email(email, template, locals)
+#             # Implement your own logic for sending welcome email
+#             template = 'welcome'
+#             locals = {'FIRSTNAME': first_name}
+#             send_email(email, template, locals)
 
-            # Implement your own logic for generating tokens
-            token = set_token(user_id)
+#             # Implement your own logic for generating tokens
+#             token = set_token(user_id)
 
-            return JsonResponse({'token': token, 'user_id': user_id, 'username': username, 'email': email})
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)  # Internal Server Error
+#             return JsonResponse({'token': token, 'user_id': user_id, 'username': username, 'email': email})
+#         except Exception as e:
+#             return JsonResponse({'error': str(e)}, status=500)  # Internal Server Error
 
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
+#     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 @api_view(['POST'])
 @csrf_exempt
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def create_user(request):
     if request.method == 'POST':
         verify_key = request.data.get('verify_key')
-
         # Check if the verification key is provided
         if not verify_key:
             return JsonResponse({'error': 'Verification key is missing'}, status=400)
 
-        # Implement your own logic for verifying the user
-        user_to_verify = verify_user(verify_key)
-        print(user_to_verify)
-
-        # Check if the user is not found or already verified
-        # if not user_to_verify or user_to_verify.is_email_verified:
-        #     return JsonResponse({'error': 'Invalid verification key or user already verified'}, status=400)
-
         try:
+            user_to_verify = User.objects.get(verify_key=verify_key)
+            print(user_to_verify)
+            # Find the user by verify_key
+            # Check if the user is already verified
+            if user_to_verify.is_email_verified:
+                return JsonResponse({'error': 'User already verified'}, status=400)
+
             # Update user's email verification status
             user_to_verify.is_email_verified = True
             user_to_verify.verify_key = ""  # Set verify_key to empty
@@ -149,6 +148,8 @@ def create_user(request):
             token = set_token(user_id)
 
             return JsonResponse({'token': token, 'user_id': user_id, 'username': username, 'email': email})
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User not found or invalid verification key'}, status=400)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)  # Internal Server Error
 

@@ -23,6 +23,7 @@ export const CreateUser = async (req, res) => {
   let username = result.username;
   let email = result.email;
 
+
   //save contact to email marketing and sales crm
   let FIRSTNAME = username.split(' ')[0];
   await CreateContact(email, FIRSTNAME);

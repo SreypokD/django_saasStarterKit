@@ -94,7 +94,7 @@ const ConfirmedEmail = () => {
     let result = await axios.post('/auth/create-user', data).catch((err) => {
       fetchFailure(err);
     });
-
+    console.log('here result: ' , result);
     let id = result.data.user_id;
     let username = result.data.username;
     let jwt_token = result.data.token;
@@ -123,7 +123,7 @@ const ConfirmedEmail = () => {
       .post('/api/users/verify-invite', data)
       .catch((err) => fetchFailure(err));
 
-    console.log(result);
+    console.log('here' ,result);
     let org_id = result.data.org_id;
     setOrgId(org_id);
     createRole(org_id, user_id);
