@@ -3,8 +3,8 @@ import { colors } from '../../../styles/theme';
 
 const Label = styled.label`
   input {
-    margin-top: 0.5rem;
-    width: 50rem;
+    margin: 0.5rem 0rem 0rem -6.3rem;
+    width: 20rem;
   }
   display: block;
   font-weight: 500;

@@ -27,12 +27,10 @@ def signup(request):
                 if serializer.is_valid():
                     email = serializer.validated_data.get('email')
                     username = serializer.validated_data.get('username')
-                    invite_key = serializer.validated_data.get('invite_key')
-                    invite_key = serializer.validated_data.get('invite_key')
                     # Generate a verification key
                     verify_key = get_random_string(20)
 
-                    # Set the firebase_user_id to the user_id from the token
+                    # Set the firebase_user_id to the user_id from the token and new user
                     new_user = User(
                         email=email,
                         username=username,
@@ -59,6 +57,58 @@ def signup(request):
         else:
             # Handle case where no token is provided
             return Response({'error': 'No token provided'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+@api_view(['POST'])
+@csrf_exempt
+
+def create_user(request):
+    if request.method == 'POST':
+        verify_key = request.data.get('verify_key')
+        # Check if the verification key is provided
+        if not verify_key:
+            return JsonResponse({'error': 'Verification key is missing'}, status=400)
+
+        try:
+            user_to_verify = User.objects.get(verify_key=verify_key)
+            print(user_to_verify)
+            # Find the user by verify_key
+            # Check if the user is already verified
+            if user_to_verify.is_email_verified:
+                return JsonResponse({'error': 'User already verified'}, status=400)
+
+            # Update user's email verification status
+            user_to_verify.is_email_verified = True
+            user_to_verify.verify_key = ""  # Set verify_key to empty
+            user_to_verify.save()
+
+            user_id = user_to_verify.id
+            username = user_to_verify.username
+            email = user_to_verify.email
+
+      
+            first_name = username.split(' ')[0]
+            create_contact(email, first_name)
+
+            # sending welcome email
+            template = 'welcome'
+            locals = {'FIRSTNAME': first_name}
+            send_email(email, template, locals)
+
+            # generating tokens
+            token = set_token(user_id)
+
+            return JsonResponse({'token': token, 'user_id': user_id, 'username': username, 'email': email})
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User not found or invalid verification key'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)  # Internal Server Error
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+
 
 
 
@@ -107,51 +157,3 @@ def signup(request):
 #             return JsonResponse({'error': str(e)}, status=500)  # Internal Server Error
 
 #     return JsonResponse({'error': 'Invalid request method'}, status=405)
-
-@api_view(['POST'])
-@csrf_exempt
-# @permission_classes([AllowAny])
-def create_user(request):
-    if request.method == 'POST':
-        verify_key = request.data.get('verify_key')
-        # Check if the verification key is provided
-        if not verify_key:
-            return JsonResponse({'error': 'Verification key is missing'}, status=400)
-
-        try:
-            user_to_verify = User.objects.get(verify_key=verify_key)
-            print(user_to_verify)
-            # Find the user by verify_key
-            # Check if the user is already verified
-            if user_to_verify.is_email_verified:
-                return JsonResponse({'error': 'User already verified'}, status=400)
-
-            # Update user's email verification status
-            user_to_verify.is_email_verified = True
-            user_to_verify.verify_key = ""  # Set verify_key to empty
-            user_to_verify.save()
-
-            user_id = user_to_verify.id
-            username = user_to_verify.username
-            email = user_to_verify.email
-
-            # Implement your own logic for saving contact
-            first_name = username.split(' ')[0]
-            create_contact(email, first_name)
-
-            # Implement your own logic for sending welcome email
-            template = 'welcome'
-            locals = {'FIRSTNAME': first_name}
-            send_email(email, template, locals)
-
-            # Implement your own logic for generating tokens
-            token = set_token(user_id)
-
-            return JsonResponse({'token': token, 'user_id': user_id, 'username': username, 'email': email})
-        except User.DoesNotExist:
-            return JsonResponse({'error': 'User not found or invalid verification key'}, status=400)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)  # Internal Server Error
-
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
-

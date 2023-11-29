@@ -163,12 +163,14 @@ FIREBASE_MESSAGING_SENDER_ID = "538255995637"
 FIREBASE_APP_ID =  "1:538255995637:web:7fc4832f0bbdf42cfa0bbc"
 FIREBASE_MEASUREMENT_ID = "G-H80MWNQ31R"
 
+
+
 # email sending configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_PORT = 2525  # Your Mailtrap port
-EMAIL_HOST_USER = '40cdeb2262a948'  # Your Mailtrap username
-EMAIL_HOST_PASSWORD = '326df14116f3b1'  # Your Mailtrap password
+EMAIL_PORT = 2525  
+EMAIL_HOST_USER = '40cdeb2262a948'  
+EMAIL_HOST_PASSWORD = '326df14116f3b1'  
 EMAIL_USE_TLS = True
 
 

@@ -15,7 +15,7 @@ import TitleBase from '../../../components/Auth/title';
 import AuthCard from '../../../components/Auth/authCard';
 import LoadingOverlay from '../../../components/Common/loadingOverlay';
 import FieldLabel from '../../../components/Common/forms/FieldLabel';
-import TextInput from '../../../components/Common/forms/TextInput';
+import TextOrg from '../../../components/Common/forms/TextOrg';
 
 const Wrapper = styled.div`
   background-color: ${colors.gray50};
@@ -206,7 +206,7 @@ const ConfirmedEmail = () => {
                 <form onSubmit={handleSubmit}>
                   <FieldLabel htmlFor="org_name">
                     Organization Name:
-                    <TextInput id="org_name" />
+                    <TextOrg id="org_name" />
                   </FieldLabel>
                 </form>
               </div>

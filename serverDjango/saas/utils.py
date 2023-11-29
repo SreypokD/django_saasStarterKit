@@ -21,13 +21,11 @@ def create_contact(email, first_name):
     pass
 
 def send_email(to_email, template, locals, username):
-    # Placeholder function for sending emails
+
     # Implement your logic to send emails using Django's send_mail function
-    subject = 'Please verify Email'  # Replace with your email subject
-    message = 'Message'  # Replace with your plain text email message
+    subject = 'Please verify Email'  
+    message = 'Message' 
 
-
-    # html_message =  f'<h2 color="red">Hi {username},</h2><a href ="{locals["verification_link"]}">Click</a>'  # Replace with your HTML email message
     html_message = f'''
         <html
             <body>
@@ -49,9 +47,8 @@ def send_email(to_email, template, locals, username):
         html_message=html_message,
     )
 
+
 def set_token(user_id):
-    # Placeholder function for generating tokens
-    # Implement your logic to generate tokens (e.g., using Django REST Framework's Token model)
     expiration_time = datetime.utcnow() + timedelta(days=1)
     payload = {
         'user_id': user_id,

@@ -1,5 +1,4 @@
 from django.db import models
-# Create your models here.
 import uuid
 
 class User(models.Model):
@@ -44,24 +43,18 @@ class Todo(models.Model):
 
     @classmethod
     def get_todos(cls, org_id):
-        # Implement your logic to retrieve todos here
-        # You can use Django's ORM to query the database
-        # Return the results
+
         return cls.objects.filter(org_id=org_id).all()
 
     @classmethod
     def create_todo(cls, title, description, author, status, date, org_id):
-        # Implement your logic to create a new todo here
-        # Use Django's ORM to create a new Todo object
-        # Save it to the database
+
         todo = cls(title=title, description=description, author=author, status=status, date=date, org_id=org_id)
         todo.save()
         return todo
 
     @classmethod
     def update_todo(cls, title, description, author, status, date, todo_id):
-        # Implement your logic to update a todo here
-        # Use Django's ORM to retrieve and update the Todo object
         todo = cls.objects.get(id=todo_id)
         todo.title = title
         todo.description = description
@@ -72,14 +65,11 @@ class Todo(models.Model):
 
     @classmethod
     def delete_todo(cls, todo_id):
-        # Implement your logic to delete a todo here
-        # Use Django's ORM to retrieve and delete the Todo object
+
         cls.objects.filter(id=todo_id).delete()
 
     @classmethod
     def complete_todo(cls, todo_id):
-        # Implement your logic to mark a todo as completed here
-        # Use Django's ORM to retrieve and update the Todo object
         todo = cls.objects.get(id=todo_id)
         todo.status = 'completed'
         todo.save()
