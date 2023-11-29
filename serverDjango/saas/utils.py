@@ -48,6 +48,36 @@ def send_email(to_email, template, locals, username):
     )
 
 
+
+def send_email_welcome(to_email, template, locals, username):
+
+    # Implement your logic to send emails using Django's send_mail function
+    subject = 'Welcome'  
+    message = 'Message' 
+
+    html_message = f'''
+        <html
+            <body>
+                <h2 style="color: #336699;">Hi {username},</h2>
+                <p>
+                    Click the following link to verify your email:
+                    <a href="{locals["verification_link"]}" style="color: #009900; font-weight: bold;">Click here</a>
+                    <p>{locals["verification_link"]}</p>
+                </p>
+            </body>
+        </html>
+    '''
+    send_mail(
+        subject=subject,
+        message=message,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[to_email],
+        fail_silently=False,
+        html_message=html_message,
+    )
+
+
+
 def set_token(user_id):
     expiration_time = datetime.utcnow() + timedelta(days=1)
     payload = {

@@ -3,8 +3,7 @@ from rest_framework.response import Response
 from ..utils import verify_user, create_contact, send_email, set_token
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view,permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view
 from rest_framework import status
 from ..models import User
 from ..serializers import UserSerializer
@@ -41,7 +40,7 @@ def signup(request):
                     new_user.save()
 
                     # Send an email with the verification link
-                    verification_link = f"http://localhost:3000/auth/confirmedemail/?key={verify_key}/"
+                    verification_link = f"http://localhost:3000/auth/confirmedemail/?key={verify_key}"
                     template = 'email_verification'
                     locals = {'verification_link': verification_link}
                     send_email(email, template, locals,username)
@@ -71,8 +70,8 @@ def create_user(request):
             return JsonResponse({'error': 'Verification key is missing'}, status=400)
 
         try:
-            user_to_verify = User.objects.get(verify_key=verify_key)
-            print(user_to_verify)
+            user_to_verify = User.objects.get(verify_key= verify_key)
+            print('result: ' , user_to_verify)
             # Find the user by verify_key
             # Check if the user is already verified
             if user_to_verify.is_email_verified:
